@@ -7,7 +7,11 @@ from api.prompts import initiatives, overview, job_postings, five_year, collecti
 from run_prompts import run_research
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
+from openai import AsyncOpenAI, RateLimitError
 import time
+
+oclient = AsyncOpenAI
+sema = asyncio.Semaphore(3)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -66,16 +70,29 @@ async def research(ctx, company: str):
 
     start = time.time()
 
-    async def task(p):
-        loop = asyncio.get_running_loop()
-        result = await loop.run_in_executor(executor, run_research, p)
-        for i in range(0, len(result), 1900):
-            await ctx.send(result[i:i + 1900])
+    sem = asyncio.Semaphore(3)
+
+    async def send_long(text: str, step: int = 1900):
+        for i in range(0, len(text), step):
+            await ctx.send(text[i:i+step])
+
+    async def task(prompt: str):
+        async with sem:
+            try:
+                result = await run_research(prompt)   # must return a string
+                if not result:
+                    await ctx.send("No result for one sub-prompt.")
+                    return
+                await send_long(result)
+            except Exception as e:
+                await ctx.send(f"Sub-prompt error: `{str(e)[:1500]}`")
 
     tasks = [asyncio.create_task(task(p)) for p in prompts]
+
+    # Stream results as each finishes (faster feedback)
     for coro in asyncio.as_completed(tasks):
         await coro
-
+        
     await ctx.send(
         f"TOTAL TIME TAKEN: {int((time.time() - start) // 60)} minutes and {int((time.time() - start) % 60)} seconds."
     )
