@@ -64,3 +64,17 @@ Constraints:
 
 Find the company's ({company_name}) full tech stack through job postings and descriptions - especially their PSA, ERP, and CRM.  List which role, the link, and quote of them mentioning it. Use EVERY quote you can possible find , do not hold back. We need to know how they operate internally, and the systems which allow that-  ALSO provide how many jobs are open and the trends seen within, and if there are any initiatives mentioned.
 """
+
+def collecting_material(company_name):
+    return f"""
+    treat the input context as final; do NOT reinterpret or reframe. Work step by step, no shortcuts. 
+    Do this for {company_name} Collect ALL Relevant Materials Every single Quarterly posting from Q1 2024 - to Present Quarter., 
+    From the Events & Presentations section of their website, collect every single available resource that fits this: 
+    Quarterly Earnings call decks (PDF) Transcripts of earnings calls (PDF/HTML) Investor Day presentations (long-term strategy, 3–5 year goals) 
+    Analyst Day materials (deep operational/financial dives) Industry conference decks (target markets, competitive positioning) Special updates 
+    (M&A, restructuring, capital allocation, cost initiatives) Webcasts or recordings (if slides are not available, still link the webcast/transcript page). 
+    If multiple links exist per quarter (ex: presentation + transcript + webcast), collect all of them. Do not provide me with anything that is filed to the SEC (10Qs, 10ks, etc) . 
+    Provide a list of copyable direct links so I can copy and paste
+
+
+"""

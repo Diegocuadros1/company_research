@@ -321,6 +321,7 @@ def run_research(user_prompt: str) -> None:
             client=client
         )
         print(answer)
+        return answer
         # print(f"Time taken for search: {time.time() - start}")
         print("\n\n\n")
         print("======================================================================================================================================")

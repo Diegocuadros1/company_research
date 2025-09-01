@@ -1,5 +1,5 @@
 from api.sec_files import get_sec_files, filter_sec_files
-from api.prompts import initiatives, overview, job_postings, five_year
+from api.prompts import initiatives, overview, job_postings, five_year, collecting_material
 from run_prompts import run_research
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
@@ -22,13 +22,18 @@ def main():
     print(count, "SEC Files found")
     # print("Running Prompts")
 
-    overview_prompt = overview(filtered_sec_files)
+    overview_prompt = overview(company)
     initiatives_prompt = initiatives(company)
     five_year_prompt = five_year(company)
     job_postings_prompt = job_postings(company)
+    collecting_material_prompt = collecting_material(company)
 
     prompts =  [
         overview_prompt,
+        initiatives_prompt,
+        five_year_prompt,
+        job_postings_prompt,
+        collecting_material_prompt
     ]
 
     start = time.time()
